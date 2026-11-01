@@ -73,7 +73,28 @@ DispatchQueue.main.asyncAfter(deadline: .now() + 4.5) {
     let copied = board.string(forType: .string) == fixture && board.string(forType: .init("app.velopaste.restored")) == "1"
     guard copied else { finish(false, "Return didn't select the clipboard fixture"); return }
     if AXIsProcessTrusted() {
-        finish(editor.string == fixture, "History capture → global shortcut → arrow selection → Return → paste into the previous app")
+        guard editor.string == fixture else { finish(false, "Arrow selection didn't paste into the previous app"); return }
+        print("PASS: History capture → global shortcut → arrow selection → Return → paste into the previous app")
+        editor.string = ""
+        press(9, flags: .maskAlternate)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+            press(3, flags: .maskCommand) // Command+F focuses the native search field.
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                let units = Array("verified".utf16)
+                units.withUnsafeBufferPointer { buffer in
+                    for down in [true, false] {
+                        let event = CGEvent(keyboardEventSource: nil, virtualKey: 0, keyDown: down)!
+                        event.flags = []
+                        event.keyboardSetUnicodeString(stringLength: buffer.count, unicodeString: buffer.baseAddress!)
+                        event.post(tap: .cghidEventTap)
+                    }
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { press(36) }
+            }
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.4) {
+            finish(editor.string == fixture, "Command+F → native search filtering → Return → paste matching history item")
+        }
     } else {
         finish(true, "History capture → global shortcut → arrow selection → Return → copy. Direct paste requires Accessibility.")
     }

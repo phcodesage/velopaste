@@ -55,6 +55,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         }
         setupKeyboard()
         if preview || (!smoke && !store.preferences.bool(forKey: "hasLaunched")) {
+            if preview { NSApp.activate(ignoringOtherApps: true) }
             show(centered: true)
             if !preview { store.preferences.set(true, forKey: "hasLaunched") }
         }
@@ -166,8 +167,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
                 else { self.hide() }
                 return nil
             }
-            if self.store.showingSettings || self.store.mode != .clipboard { return event }
             let modifiers = event.modifierFlags.intersection([.command, .shift, .option, .control])
+            if !self.store.showingSettings, modifiers == .command, event.charactersIgnoringModifiers == "f" {
+                NotificationCenter.default.post(name: .focusClipboardSearch, object: nil)
+                return nil
+            }
+            if self.store.showingSettings || self.store.mode != .clipboard { return event }
             if modifiers.contains(.command), let number = Int(event.charactersIgnoringModifiers ?? ""), (1...9).contains(number), number <= self.store.items.count {
                 self.choose(self.store.items[number - 1], plain: modifiers.contains(.shift))
                 return nil

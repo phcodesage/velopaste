@@ -1,6 +1,8 @@
 # Velopaste
 
-**Your copy, kept.** A native, open-source clipboard history for macOS, inspired by the Windows Win+V workflow.
+A native, open-source clipboard history for macOS with San Francisco typography, standard Apple controls, and an encrypted local history. Inspired by the Windows Win+V workflow.
+
+[Source on GitHub](https://github.com/phcodesage/velopaste) · [MIT License](LICENSE)
 
 Open with **⌥V**. Search your copies. Press Return to use one. Pin the things you reach for every day.
 
@@ -17,6 +19,7 @@ Open with **⌥V**. Search your copies. Press Return to use one. Pin the things 
 - Pins, deduplication, per-item deletion, full previews, and Clear all that keeps pins.
 - Keyboard navigation, quick item shortcuts, and optional direct pasting into the previous app.
 - Searchable emoji and symbol pickers, including currency and Mac keyboard symbols.
+- Apple system typography, native search and segmented controls, neutral materials, and system blue highlights.
 - Light, dark, and system appearance; configurable shortcut, history size, and launch at login.
 - Local AES-256-GCM encrypted history with the key in macOS Keychain.
 - Pause/resume, excluded apps, and automatic skipping of marked confidential/transient clipboard entries.
@@ -25,6 +28,11 @@ Open with **⌥V**. Search your copies. Press Return to use one. Pin the things 
 ## Install on this Mac
 
 Requires macOS 13 or later and Xcode or the Swift command-line toolchain. The build targets the current Mac's architecture.
+
+```sh
+git clone https://github.com/phcodesage/velopaste.git
+cd velopaste
+```
 
 ```sh
 ./scripts/install.sh
@@ -66,6 +74,12 @@ Velopaste honors the [NSPasteboard confidential/transient conventions](https://n
 
 Polling runs every 500 ms. Items copied and replaced faster than that may be missed. The default capacity is 25 items, configurable to 250. Captured representations are limited to 4 MiB per entry and 32 MiB for the history payload. Oldest unpinned entries are evicted first. Pins survive capacity reductions; an all-pinned history can reject new copies when full.
 
+## Native macOS design
+
+Velopaste uses the system San Francisco font, SF Symbols, `NSSearchField`, native segmented pickers, grouped settings, semantic foreground/background colors, and standard menu controls. Surfaces follow light/dark appearance, with system blue for interactive highlights. The icon is original silver/graphite clipboard artwork, drawn in code.
+
+The design follows Apple's guidance on [macOS conventions](https://developer.apple.com/design/human-interface-guidelines/designing-for-macos) and [semantic system colors](https://developer.apple.com/design/human-interface-guidelines/color). No font files, Apple logos, or proprietary Apple app artwork are bundled.
+
 ## Windows comparison
 
 The core history workflow follows [Microsoft's clipboard documentation](https://support.microsoft.com/en-us/windows/apps/using-the-clipboard): open a panel, reuse text/images, pin, delete, and clear unpinned history. The interface is an original native macOS design. It is not a pixel-identical Windows shell component and does not include Microsoft account sync, cloud clipboard, online GIF search, or file-copy history. The emoji/symbol catalog is curated rather than the complete Windows catalog. No Microsoft assets are included, and this project is unaffiliated with Microsoft.
@@ -79,7 +93,7 @@ swift test
 swift scripts/smoke-test.swift "$PWD/dist/Velopaste.app"
 ```
 
-The 18 automated tests cover actual private NSPasteboard capture/restoration, RTF preservation, images, confidential markers, pause/resume, exclusions, history limits, pins, deduplication, filtering, and encrypted storage/tamper detection. Tests never touch your system clipboard or Keychain. The separate smoke test uses a temporary system clipboard fixture, an isolated in-memory app session, and restores the clipboard afterward; synthesized keystrokes require Accessibility for the invoking terminal or agent.
+The 18 automated tests cover actual private NSPasteboard capture/restoration, RTF preservation, images, confidential markers, pause/resume, exclusions, history limits, pins, deduplication, filtering, and encrypted storage/tamper detection. Tests never touch your system clipboard or Keychain. The separate smoke test checks global shortcuts, arrow selection, Command+F focus, native search filtering, and direct pasting. It uses a temporary system clipboard fixture, an isolated in-memory app session, and restores the clipboard afterward; synthesized keystrokes require Accessibility for the invoking terminal or agent.
 
 Deterministic previews use sample data, do not monitor the real clipboard, and do not open the vault:
 
@@ -92,7 +106,7 @@ dist/Velopaste.app/Contents/MacOS/Velopaste --preview --settings --snapshot "$PW
 
 Source is organized into the history model (`Clip.swift`), clipboard service (`ClipboardStore.swift`), encrypted persistence (`Vault.swift`), panel/views, and AppKit application/global shortcut integration. Open `Package.swift` in Xcode or use SwiftPM. The original app icon is generated by `scripts/make-icon.swift`.
 
-This local build is ad-hoc signed, not Apple-notarized. Distribution to other Macs should use your own Developer ID signing and notarization. The repository is prepared for sharing; no remote repository is created automatically.
+This local build is ad-hoc signed, not Apple-notarized. Distribution to other Macs should use your own Developer ID signing and notarization. The public source repository is [phcodesage/velopaste](https://github.com/phcodesage/velopaste).
 
 ## Name and license
 

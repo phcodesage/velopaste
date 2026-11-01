@@ -16,20 +16,12 @@ struct CharacterPicker: View {
     }
     var body: some View {
         VStack(spacing: 13) {
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 6) {
-                    ForEach(categories, id: \.self) { name in
-                        Button { category = name } label: {
-                            Text(name).font(.system(size: 10, weight: .semibold)).padding(.horizontal, 10).padding(.vertical, 6)
-                                .foregroundStyle(category == name ? .white : .secondary)
-                                .background(category == name ? Color(red: 0.43, green: 0.34, blue: 0.91) : .primary.opacity(0.045), in: Capsule())
-                        }.buttonStyle(.plain)
-                    }
-                }
-            }
+            Picker("Category", selection: $category) {
+                ForEach(categories, id: \.self) { Text($0).tag($0) }
+            }.labelsHidden().pickerStyle(.segmented).controlSize(.small)
             if matches.isEmpty {
                 Spacer()
-                Text("No matching characters").font(.system(size: 13)).foregroundStyle(.secondary)
+                Text("No matching characters").font(.body).foregroundStyle(.secondary)
                 Spacer()
             } else {
                 ScrollView {
@@ -38,13 +30,13 @@ struct CharacterPicker: View {
                             Button { store.chooseText(item.value) } label: {
                                 Text(item.value).font(.system(size: store.mode == .emoji ? 26 : 22))
                                     .frame(maxWidth: .infinity).frame(height: 44)
-                                    .background(.primary.opacity(0.035), in: RoundedRectangle(cornerRadius: 9))
+                                    .background(MacStyle.surface, in: RoundedRectangle(cornerRadius: 6))
                             }.buttonStyle(.plain).help(item.keywords).accessibilityLabel(item.keywords)
                         }
                     }.padding(.bottom, 15)
                 }
             }
-        }.padding(.horizontal, 20).frame(maxHeight: .infinity)
+        }.padding(.horizontal, 16).frame(maxHeight: .infinity)
             .onChange(of: store.mode) { _ in category = "All" }
     }
     private static func group(_ category: String, _ entries: [(String, String)]) -> [CharacterItem] {

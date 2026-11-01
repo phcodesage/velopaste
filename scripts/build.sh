@@ -8,7 +8,7 @@ APP="$PROJECT_DIR/dist/Velopaste.app"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 cp "$BIN_DIR/Velopaste" "$APP/Contents/MacOS/Velopaste"
 cp Resources/Info.plist "$APP/Contents/Info.plist"
-if [ ! -f Resources/AppIcon.icns ]; then
+if [ ! -f Resources/AppIcon.icns ] || [ scripts/make-icon.swift -nt Resources/AppIcon.icns ]; then
     swift scripts/make-icon.swift Resources/AppIcon.png
     ICONSET="$PROJECT_DIR/.build/Velopaste.iconset"
     mkdir -p "$ICONSET"

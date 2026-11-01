@@ -1,42 +1,44 @@
 import AppKit
 
-// A code-drawn, original vector mark; no external image or font assets.
+// Original clipboard geometry on a neutral silver tile; no bundled fonts or Apple artwork.
 let destination = CommandLine.arguments[1]
 let image = NSImage(size: NSSize(width: 1024, height: 1024))
 image.lockFocus()
 let outer = NSBezierPath(roundedRect: NSRect(x: 70, y: 70, width: 884, height: 884), xRadius: 204, yRadius: 204)
-NSGradient(starting: NSColor(red: 0.36, green: 0.25, blue: 0.82, alpha: 1), ending: NSColor(red: 0.66, green: 0.49, blue: 1, alpha: 1))!.draw(in: outer, angle: 45)
+NSGradient(starting: NSColor(white: 0.78, alpha: 1), ending: NSColor(white: 0.98, alpha: 1))!.draw(in: outer, angle: 90)
+NSColor.white.withAlphaComponent(0.75).setStroke()
+outer.lineWidth = 2
+outer.stroke()
 NSGraphicsContext.saveGraphicsState()
 let transform = NSAffineTransform()
 transform.translateX(by: 470, yBy: 495)
-transform.rotate(byDegrees: -12)
+transform.rotate(byDegrees: -10)
 transform.concat()
-NSColor.white.withAlphaComponent(0.22).setFill()
-NSBezierPath(roundedRect: NSRect(x: -215, y: -225, width: 370, height: 480), xRadius: 46, yRadius: 46).fill()
+NSColor(white: 0.68, alpha: 1).setFill()
+NSBezierPath(roundedRect: NSRect(x: -215, y: -225, width: 370, height: 480), xRadius: 40, yRadius: 40).fill()
 NSGraphicsContext.restoreGraphicsState()
 let shadow = NSShadow()
-shadow.shadowColor = NSColor.black.withAlphaComponent(0.18)
-shadow.shadowBlurRadius = 28
-shadow.shadowOffset = NSSize(width: 0, height: -14)
+shadow.shadowColor = NSColor.black.withAlphaComponent(0.22)
+shadow.shadowBlurRadius = 24
+shadow.shadowOffset = NSSize(width: 0, height: -12)
 NSGraphicsContext.saveGraphicsState()
 shadow.set()
 NSColor.white.setFill()
-NSBezierPath(roundedRect: NSRect(x: 359, y: 266, width: 360, height: 474), xRadius: 46, yRadius: 46).fill()
+NSBezierPath(roundedRect: NSRect(x: 349, y: 246, width: 370, height: 494), xRadius: 40, yRadius: 40).fill()
 NSGraphicsContext.restoreGraphicsState()
-NSColor(red: 0.72, green: 0.63, blue: 0.98, alpha: 1).setFill()
-NSBezierPath(roundedRect: NSRect(x: 450, y: 708, width: 177, height: 60), xRadius: 24, yRadius: 24).fill()
-NSColor(red: 0.48, green: 0.36, blue: 0.87, alpha: 1).setFill()
+NSGradient(starting: NSColor(white: 0.35, alpha: 1), ending: NSColor(white: 0.52, alpha: 1))!.draw(in: NSBezierPath(roundedRect: NSRect(x: 444, y: 708, width: 180, height: 60), xRadius: 20, yRadius: 20), angle: 90)
+NSColor(white: 0.58, alpha: 1).setFill()
 for (y, width) in [(610.0, 207.0), (544.0, 207.0), (478.0, 135.0)] {
-    NSBezierPath(roundedRect: NSRect(x: 427, y: y, width: width, height: 24), xRadius: 12, yRadius: 12).fill()
+    NSBezierPath(roundedRect: NSRect(x: 422, y: y, width: width, height: 20), xRadius: 10, yRadius: 10).fill()
 }
 let check = NSBezierPath()
-check.move(to: NSPoint(x: 589, y: 368))
-check.line(to: NSPoint(x: 625, y: 334))
-check.line(to: NSPoint(x: 688, y: 402))
-check.lineWidth = 27
+check.move(to: NSPoint(x: 580, y: 362))
+check.line(to: NSPoint(x: 616, y: 328))
+check.line(to: NSPoint(x: 679, y: 396))
+check.lineWidth = 25
 check.lineCapStyle = .round
 check.lineJoinStyle = .round
-NSColor(red: 0.48, green: 0.36, blue: 0.87, alpha: 1).setStroke()
+NSColor.systemBlue.setStroke()
 check.stroke()
 image.unlockFocus()
 let bitmap = NSBitmapImageRep(data: image.tiffRepresentation!)!
